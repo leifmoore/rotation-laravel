@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to Vercel
 
 on:
   push:
@@ -35,9 +35,10 @@ jobs:
           npm install
           npm run build
 
-      - name: Build and deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          domain: rotation-laravel.vercel.app
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org: ${{ secrets.VERCEL_ORG }}
+          vercel-project: rotation-laravel
+          github-token: ${{ secrets.GITHUB_TOKEN }}
