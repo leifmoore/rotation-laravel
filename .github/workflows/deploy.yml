@@ -21,11 +21,39 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: Create .env file
+        run: |
+          cp .env.example .env
+          echo "APP_NAME="${{ github.repository }}"" >> .env
+          echo "APP_ENV=production" >> .env
+          echo "APP_KEY=" >> .env
+          echo "APP_DEBUG=false" >> .env
+          echo "APP_URL="${{ secrets.VERCEL_URL }}"" >> .env
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=/var/www/html/database/database.sqlite" >> .env
+          echo "BROADCAST_DRIVER=pusher" >> .env
+          echo "CACHE_DRIVER=file" >> .env
+          echo "FILESYSTEM_DISK=local" >> .env
+          echo "QUEUE_CONNECTION=sync" >> .env
+          echo "SESSION_DRIVER=file" >> .env
+          echo "MEMCACHED_HOST=127.0.0.1" >> .env
+          echo "MAIL_MAILER=smtp" >> .env
+          echo "MAIL_HOST=mailhog" >> .env
+          echo "MAIL_PORT=1025" >> .env
+          echo "MAIL_USERNAME=null" >> .env
+          echo "MAIL_PASSWORD=null" >> .env
+          echo "MAIL_ENCRYPTION=null" >> .env
+          echo "MAIL_FROM_ADDRESS="null@${{ github.repository }}"" >> .env
+          echo "MAIL_FROM_NAME="${{ github.repository }}"" >> .env
+          echo "VITE_APP_NAME="${{ github.repository }}"" >> .env
+          echo "VITE_PUSHER_APP_KEY=${{ secrets.PUSHER_APP_KEY }}" >> .env
+          echo "VITE_PUSHER_HOST=${{ secrets.PUSHER_HOST }}" >> .env
+          echo "VITE_PUSHER_PORT=${{ secrets.PUSHER_PORT }}" >> .env
+          echo "VITE_PUSHER_APP_CLUSTER=${{ secrets.PUSHER_APP_CLUSTER }}" >> .env
+          echo "VITE_PUSHER_APP_ID=${{ secrets.PUSHER_APP_ID }}" >> .env
+
       - name: Generate key
         run: php artisan key:generate --force
-
-      - name: Create .env file
-        run: cp .env.example .env
 
       - name: Run migrations
         run: php artisan migrate:fresh --force
